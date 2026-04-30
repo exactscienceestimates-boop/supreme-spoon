@@ -1,0 +1,5 @@
+node_modules/
+apify_actors.json
+apify_actors_simple.txt
+*.log
+.env

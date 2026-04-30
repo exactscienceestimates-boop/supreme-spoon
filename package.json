@@ -1,0 +1,27 @@
+{
+  "name": "scraping-apis-for-devs",
+  "version": "1.0.0",
+  "description": "A comprehensive collection of scraping and data APIs for developers, organized by category.",
+  "main": "scripts/fetch_apify_actors.js",
+  "scripts": {
+    "fetch": "node scripts/fetch_apify_actors.js",
+    "filter": "node scripts/filter_scraping_apis.js",
+    "generate-readme": "node scripts/generate_readme_clean.js",
+    "update-readme": "node scripts/update_main_readme.js",
+    "deduplicate": "node scripts/remove_duplicate_apis.js",
+    "limit-top": "node scripts/limit_to_top_250.js",
+    "update-counts": "node scripts/update_main_readme_counts.js"
+  },
+  "keywords": [
+    "scraping",
+    "api",
+    "apify",
+    "web-scraping",
+    "data-extraction",
+    "automation"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
