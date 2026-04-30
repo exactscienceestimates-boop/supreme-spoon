@@ -151,7 +151,7 @@ function ZohoSetupContent() {
             <h2 className="font-bold text-gray-900">Create a Zoho API Client</h2>
           </div>
           <ol className="space-y-2 text-sm text-gray-700 list-none pl-0">
-            <li className="flex gap-2"><span className="text-amber-500 font-bold">a.</span>Go to <strong>api-console.zoho.com</strong> and log in with <strong>brent@exactestimate.pro</strong></li>
+            <li className="flex gap-2"><span className="text-amber-500 font-bold">a.</span>Go to <strong>api-console.zoho.com</strong> and log in with <strong>exactscienceestimates@gmail.com</strong></li>
             <li className="flex gap-2"><span className="text-amber-500 font-bold">b.</span>Click <strong>&quot;Add Client&quot;</strong></li>
             <li className="flex gap-2"><span className="text-amber-500 font-bold">c.</span>Choose your setup method below:</li>
           </ol>

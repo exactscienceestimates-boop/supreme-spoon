@@ -76,7 +76,7 @@ export default function HomePage() {
               </Link>
             </div>
             <p className="text-gray-500 text-sm mt-4">
-              Fort Lauderdale, FL &middot; (954) 260-7973 &middot; brent@exactestimate.pro
+              Fort Lauderdale, FL &middot; (954) 260-7973 &middot; exactscienceestimates@gmail.com
             </p>
           </div>
         </div>

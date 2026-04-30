@@ -39,8 +39,8 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="mailto:brent@exactestimate.pro" className="hover:text-amber-400 transition-colors">
-                  brent@exactestimate.pro
+                <a href="mailto:exactscienceestimates@gmail.com" className="hover:text-amber-400 transition-colors">
+                  exactscienceestimates@gmail.com
                 </a>
               </li>
               <li>Fort Lauderdale, FL 33301</li>
