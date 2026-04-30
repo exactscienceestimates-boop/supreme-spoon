@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateRoofEstimate } from "@/lib/claude";
 
+export const maxDuration = 60;
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();

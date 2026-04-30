@@ -1,0 +1,12 @@
+{
+  "framework": "nextjs",
+  "functions": {
+    "src/app/api/estimate/route.ts": { "maxDuration": 60 },
+    "src/app/api/claims/upload/route.ts": { "maxDuration": 60 },
+    "src/app/api/zoho/status/route.ts": { "maxDuration": 15 },
+    "src/app/api/zoho/exchange/route.ts": { "maxDuration": 15 },
+    "src/app/api/zoho/callback/route.ts": { "maxDuration": 15 },
+    "src/app/api/zoho/leads/route.ts": { "maxDuration": 15 },
+    "src/app/api/zoho/deals/route.ts": { "maxDuration": 15 }
+  }
+}
