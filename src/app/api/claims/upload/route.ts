@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateSupplementEstimate } from "@/lib/claude";
 import { createZohoDeal } from "@/lib/zoho";
+import {
+  sanitizeString,
+  sanitizeEmail,
+  sanitizePhone,
+  validateFile,
+  MAX_FILES,
+} from "@/lib/security";
 
 export const maxDuration = 60;
 
@@ -9,16 +16,16 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
 
     const claimData = {
-      adjusterName: formData.get("adjusterName") as string,
-      adjusterEmail: formData.get("adjusterEmail") as string,
-      adjusterPhone: formData.get("adjusterPhone") as string,
-      companyName: formData.get("companyName") as string,
-      insuredName: formData.get("insuredName") as string,
-      claimNumber: formData.get("claimNumber") as string,
-      policyNumber: formData.get("policyNumber") as string,
-      lossDate: formData.get("lossDate") as string,
-      propertyAddress: formData.get("propertyAddress") as string,
-      notes: (formData.get("notes") as string) || "",
+      adjusterName:    sanitizeString(formData.get("adjusterName") as string || "", 100),
+      adjusterEmail:   sanitizeEmail(formData.get("adjusterEmail") as string || ""),
+      adjusterPhone:   sanitizePhone(formData.get("adjusterPhone") as string || ""),
+      companyName:     sanitizeString(formData.get("companyName") as string || "", 100),
+      insuredName:     sanitizeString(formData.get("insuredName") as string || "", 100),
+      claimNumber:     sanitizeString(formData.get("claimNumber") as string || "", 50),
+      policyNumber:    sanitizeString(formData.get("policyNumber") as string || "", 50),
+      lossDate:        sanitizeString(formData.get("lossDate") as string || "", 20),
+      propertyAddress: sanitizeString(formData.get("propertyAddress") as string || "", 200),
+      notes:           sanitizeString(formData.get("notes") as string || "", 1000),
     };
 
     if (!claimData.insuredName || !claimData.claimNumber || !claimData.propertyAddress) {
@@ -29,23 +36,31 @@ export async function POST(req: NextRequest) {
     }
 
     const files = formData.getAll("files") as File[];
-    let fileContents = "";
+    if (files.length > MAX_FILES) {
+      return NextResponse.json({ error: `Maximum ${MAX_FILES} files allowed` }, { status: 400 });
+    }
 
+    // Validate every file server-side
+    for (const file of files) {
+      validateFile(file);
+    }
+
+    let fileContents = "";
     for (const file of files) {
       if (file.type === "text/plain") {
         const text = await file.text();
-        fileContents += `\n\n--- File: ${file.name} ---\n${text}`;
+        fileContents += `\n\n--- File: ${file.name} ---\n${sanitizeString(text, 5000)}`;
       } else {
-        fileContents += `\n\n--- File: ${file.name} (${file.type}, ${(file.size / 1024).toFixed(1)}KB) ---\n[Binary file — use metadata for context]`;
+        fileContents += `\n\n--- File: ${file.name} (${file.type}, ${(file.size / 1024).toFixed(1)}KB) ---\n[Binary file]`;
       }
     }
 
     const supplement = await generateSupplementEstimate(
       {
-        insuredName: claimData.insuredName,
-        claimNumber: claimData.claimNumber,
+        insuredName:     claimData.insuredName,
+        claimNumber:     claimData.claimNumber,
         propertyAddress: claimData.propertyAddress,
-        lossDate: claimData.lossDate,
+        lossDate:        claimData.lossDate,
       },
       fileContents
     );
@@ -64,10 +79,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(supplement);
   } catch (err) {
-    console.error("Claim processing error:", err);
-    return NextResponse.json(
-      { error: "Failed to process claim. Please try again." },
-      { status: 500 }
-    );
+    const message = err instanceof Error ? err.message : "Failed to process claim";
+    const isUserError = message.includes("Invalid") || message.includes("not allowed") || message.includes("required") || message.includes("Maximum");
+    return NextResponse.json({ error: message }, { status: isUserError ? 400 : 500 });
   }
 }

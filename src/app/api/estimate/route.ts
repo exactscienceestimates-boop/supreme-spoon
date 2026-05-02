@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateRoofEstimate } from "@/lib/claude";
+import {
+  sanitizeString,
+  validateSquareFootage,
+  validatePitch,
+  validateStories,
+} from "@/lib/security";
 
 export const maxDuration = 60;
 
@@ -15,19 +21,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const result = await generateRoofEstimate(
-      address,
-      parseInt(squareFootage),
-      pitch,
-      parseInt(stories) || 1
-    );
+    const safeAddress = sanitizeString(address, 200);
+    const safeSqft = validateSquareFootage(parseInt(squareFootage));
+    const safePitch = validatePitch(pitch);
+    const safeStories = validateStories(parseInt(stories) || 1);
 
+    const result = await generateRoofEstimate(safeAddress, safeSqft, safePitch, safeStories);
     return NextResponse.json(result);
   } catch (err) {
-    console.error("Estimate generation error:", err);
-    return NextResponse.json(
-      { error: "Failed to generate estimate. Please try again." },
-      { status: 500 }
-    );
+    const message = err instanceof Error ? err.message : "Failed to generate estimate";
+    const isUserError = message.includes("must be") || message.includes("Invalid") || message.includes("required");
+    return NextResponse.json({ error: message }, { status: isUserError ? 400 : 500 });
   }
 }
