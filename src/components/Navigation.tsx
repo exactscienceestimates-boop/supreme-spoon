@@ -30,6 +30,9 @@ export default function Navigation() {
             <Link href="/claims" className="text-sm text-gray-300 hover:text-white transition-colors">
               Submit Claim
             </Link>
+            <Link href="/tutorial" className="text-sm text-gray-300 hover:text-white transition-colors">
+              VS Code Tutorial
+            </Link>
             <a href="tel:9542607973" className="text-sm text-gray-300 hover:text-white transition-colors">
               (954) 260-7973
             </a>
@@ -63,6 +66,9 @@ export default function Navigation() {
           </Link>
           <Link href="/claims" className="block text-sm text-gray-300 hover:text-white py-2" onClick={() => setMenuOpen(false)}>
             Submit Claim
+          </Link>
+          <Link href="/tutorial" className="block text-sm text-gray-300 hover:text-white py-2" onClick={() => setMenuOpen(false)}>
+            VS Code Tutorial
           </Link>
           <a href="tel:9542607973" className="block text-sm text-gray-300 hover:text-white py-2">
             (954) 260-7973
